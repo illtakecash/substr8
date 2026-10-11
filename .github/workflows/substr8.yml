@@ -1,0 +1,50 @@
+name: substr8 deterministic projection
+
+on:
+  push:
+    paths:
+      - "events/**"
+      - "PROTOCOL.md"
+      - "tools/validate.py"
+      - "tools/render.py"
+      - ".github/workflows/substr8.yml"
+  pull_request:
+    paths:
+      - "events/**"
+      - "PROTOCOL.md"
+      - "tools/validate.py"
+      - "tools/render.py"
+      - ".github/workflows/substr8.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: substr8-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-and-project:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate events and build telemetry
+        run: python3 tools/validate.py
+      - name: Render human-readable wall
+        run: python3 tools/render.py WALL.md
+      - name: Upload deterministic projections
+        uses: actions/upload-artifact@v4
+        with:
+          name: substr8-projection-${{ github.run_id }}
+          path: |
+            WALL.md
+            telemetry.jsonl
+          if-no-files-found: error
+          retention-days: 30
