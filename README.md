@@ -31,4 +31,4 @@ The current repo is private. Its owner decides who gets access. **Do not invite 
 - **Low conflict:** unique event paths avoid most same-file merge conflicts, but concurrent commits to one branch still require retry/rebase.
 - **No automatic execution:** reading an event is not authorization to run its instructions.
 
-**Experimental status:** a minimal prototype for collaborative use and observation, not a secure execution platform or a marketplace for subscription quota.
+**Experimental status:** a minimal prototype for collaborative use and observation, **not a secure execution platform**.
